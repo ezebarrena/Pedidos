@@ -22,8 +22,10 @@ public class CargarCliente extends JFrame{
 
     private JTextField numCliente;
     private JTextField nombreC;
-    private ButtonGroup grupoRadios1;
+    private ButtonGroup grupoRadiosF;
 	private JRadioButton radioA,radioC;
+    private ButtonGroup grupoRadiosIIBB;
+    private JRadioButton radioEx, radioG, radioEsp;
 
 
     public CargarCliente() {
@@ -59,7 +61,7 @@ public class CargarCliente extends JFrame{
         tipoFacturaLab.setBounds(60, 80, 100, 20);
         contentPane.add(tipoFacturaLab);
 
-        grupoRadios1 = new ButtonGroup();
+        grupoRadiosF = new ButtonGroup();
 
         radioA = new JRadioButton();
         radioA.setText("Factura A");
@@ -69,12 +71,38 @@ public class CargarCliente extends JFrame{
         radioC.setText("Factura C");
         radioC.setBounds(280, 80, 80, 20);
 
-        grupoRadios1.add(radioA);
-		grupoRadios1.add(radioC);
+        grupoRadiosF.add(radioA);
+		grupoRadiosF.add(radioC);
         contentPane.add(radioA);
         contentPane.add(radioC);
 /*------------------------------------------------------------------------------------------ */
 //Armar los otros botones que tienen el tipo de IIBB
+
+        JLabel tipoIIBBLab = new JLabel("Categoria IIBB");
+        tipoIIBBLab.setBounds(60, 110, 100, 20);
+        contentPane.add(tipoIIBBLab);
+
+        grupoRadiosIIBB = new ButtonGroup();
+
+        radioEx = new JRadioButton();
+        radioEx.setText("Excento");
+        radioEx.setBounds(200, 110, 80, 20);
+
+        radioG = new JRadioButton();
+        radioG.setText("General");
+        radioG.setBounds(280, 110, 80, 20);
+
+        radioEsp = new JRadioButton();
+        radioEsp.setText("Especial");
+        radioEsp.setBounds(360, 110, 80, 20);
+
+        grupoRadiosIIBB.add(radioEsp);
+        grupoRadiosIIBB.add(radioEx);
+        grupoRadiosIIBB.add(radioG);
+        contentPane.add(radioEsp);
+        contentPane.add(radioEx);
+        contentPane.add(radioG);
+
 /*------------------------------------------------------------------------------------------ */
         JButton btnNewButton = new JButton("Crear cliente");
         btnNewButton.addActionListener(new ActionListener() {
@@ -82,11 +110,44 @@ public class CargarCliente extends JFrame{
                 try {
                     if (!numCliente.getText().equalsIgnoreCase("")){
                         int numC = Integer.parseInt(numCliente.getText());
+                        String tipoF;
+                        String tipoIIBB;
 
-                        boolean respuesta = Controlador.getInstance().registrarVendedor(numC, getName());
+                        if (radioA.isSelected()){
+                            tipoF = "A";
+                        }
+                        else{
+                            tipoF = "C";
+                        }
+
+                        if (radioEx.isSelected()){
+                            tipoIIBB = "Excento";
+                        }
+                        else if (radioG.isSelected()){
+                            tipoIIBB = "General";
+                        }
+                        else{
+                            tipoIIBB ="Especial";
+                        }
+
+                        boolean respuesta = Controlador.getInstance().altaCliente(numC, nombreC.getText(), tipoF, tipoIIBB);
+                        System.out.println(numC);
+                        System.out.println(nombreC.getText());
+                        System.out.println(tipoF);
+                        System.out.println(tipoIIBB);
+                        if (respuesta) { 
+                            JOptionPane.showMessageDialog(null, "El vendedor se ha creado exitosamente","Vendedor Creado",JOptionPane.INFORMATION_MESSAGE);
+							numCliente.setText("");
+							nombreC.setText("");
+                            grupoRadiosF.clearSelection();
+                            grupoRadiosIIBB.clearSelection();
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(null,  "El vendedor no se pudo crear","Vendedor Duplicado",JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                     else{
-                        
+                        JOptionPane.showMessageDialog(null, "Ingrese un vendedor no vacio ","Vendedor incompleto",JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
                 catch(NumberFormatException ex){
@@ -94,10 +155,9 @@ public class CargarCliente extends JFrame{
                 }
             }
         });
-        btnNewButton.setBounds(250, 150, 100, 20);
+        btnNewButton.setBounds(100, 150, 150, 20);
+        contentPane.add(btnNewButton);
         
 
     }
 }
-git config --global user.email "you@example.com"
-  git config --global user.name "Your Name"
